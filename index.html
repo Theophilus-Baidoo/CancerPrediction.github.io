@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction of Cancer Survival rates and Type</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://www.transparenttextures.com/patterns/inspiration-geometry.png'), linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            color: #333;
+        }
+        header {
+            background-color: #d63031;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        header h1 {
+            position: relative;
+            z-index: 2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #d63031;
+            margin-bottom: 20px;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"], select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #d63031;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .result p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .cancer-types {
+            margin-top: 20px;
+        }
+        .cancer-types h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+        }
+        .cancer-types ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #d63031;
+            color: white;
+            font-size: 14px;
+        }
+        .ribbon {
+            position: absolute;
+            top: 20px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: #d63031;
+            transform: rotate(45deg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .ribbon-text {
+            position: absolute;
+            top: 45px;
+            left: 15px;
+            transform: rotate(-45deg);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="ribbon">
+            <div class="ribbon-text">@TB</div>
+        </div>
+        <h1>Cancer Risk Prediction </h1>
+    </header>
+    <div class="container">
+        <h2>Predict Your Cancer Risk</h2>
+        <form id="predictionForm">
+            <!-- Lung Cancer Predictors -->
+            <label for="smokingHistory">Smoking History:</label>
+            <select id="smokingHistory" name="smokingHistory" required>
+                <option value="">Select Option</option>
+                <option value="current">Current Smoker</option>
+                <option value="former">Former Smoker</option>
+                <option value="non-smoker">Non-Smoker</option>
+            </select>
+
+            <label for="secondhandSmoke">Exposure to Secondhand Smoke:</label>
+            <select id="secondhandSmoke" name="secondhandSmoke" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="pollutants">Exposure to Pollutants (Asbestos, Radon, etc.):</label>
+            <select id="pollutants" name="pollutants" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="chronicRespiratoryIssues">Chronic Respiratory Issues (COPD, Bronchitis):</label>
+            <select id="chronicRespiratoryIssues" name="chronicRespiratoryIssues" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <!-- Breast Cancer Predictors -->
+            <label for="ageGender">Age & Gender (Higher Risk in Women Over 50):</label>
+            <input type="number" id="ageGender" name="ageGender" min="0" required>
+
+            <label for="familyHistoryBreast">Family History of Breast/Ovarian Cancer:</label>
+            <select id="familyHistoryBreast" name="familyHistoryBreast" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="brcaMutation">BRCA Gene Mutation Presence:</label>
+            <select id="brcaMutation" name="brcaMutation" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="breastDensity">Breast Density (1 = Low, 5 = High):</label>
+            <input type="number" id="breastDensity" name="breastDensity" min="1" max="5" required>
+
+            <!-- Prostate Cancer Predictors -->
+            <label for="prostateFamilyHistory">Family History of Prostate Cancer:</label>
+            <select id="prostateFamilyHistory" name="prostateFamilyHistory" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="ethnicity">Ethnicity (Higher Risk in African-American Men):</label>
+            <select id="ethnicity" name="ethnicity" required>
+                <option value="">Select Option</option>
+                <option value="african-american">African-American</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="dietFatIntake">Diet High in Fat (1 = Low, 5 = High):</label>
+            <input type="number" id="dietFatIntake" name="dietFatIntake" min="1" max="5" required>
+
+            <label for="psaLevels">PSA Levels (ng/mL):</label>
+            <input type="number" id="psaLevels" name="psaLevels" step="0.1" min="0" required>
+
+            <!-- Colorectal Cancer Predictors -->
+            <label for="colorectalFamilyHistory">Family History of Colorectal Cancer or Polyps:</label>
+            <select id="colorectalFamilyHistory" name="colorectalFamilyHistory" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="dietMeatFiber">Diet High in Red/Processed Meat, Low in Fiber:</label>
+            <select id="dietMeatFiber" name="dietMeatFiber" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="inflammatoryBowelDisease">Chronic Inflammatory Bowel Disease (IBD, Crohn’s, Ulcerative Colitis):</label>
+            <select id="inflammatoryBowelDisease" name="inflammatoryBowelDisease" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <!-- Skin Cancer Predictors -->
+            <label for="skinType">Skin Type (1 = Fair, 5 = Dark):</label>
+            <input type="number" id="skinType" name="skinType" min="1" max="5" required>
+
+            <label for="sunExposure">High Sun Exposure or History of Sunburns:</label>
+            <select id="sunExposure" name="sunExposure" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="tanningBeds">Use of Tanning Beds:</label>
+            <select id="tanningBeds" name="tanningBeds" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="abnormalMoles">Presence of Abnormal Moles:</label>
+            <select id="abnormalMoles" name="abnormalMoles" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <!-- Pancreatic Cancer Predictors -->
+            <label for="pancreaticFamilyHistory">Family History of Pancreatic Cancer:</label>
+            <select id="pancreaticFamilyHistory" name="pancreaticFamilyHistory" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="chronicPancreatitis">Chronic Pancreatitis:</label>
+            <select id="chronicPancreatitis" name="chronicPancreatitis" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="diabetes">Diabetes:</label>
+            <select id="diabetes" name="diabetes" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <!-- Liver Cancer Predictors -->
+            <label for="hepatitisBC">Hepatitis B/C Infection History:</label>
+            <select id="hepatitisBC" name="hepatitisBC" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="cirrhosis">Cirrhosis or Fatty Liver Disease:</label>
+            <select id="cirrhosis" name="cirrhosis" required>
+                <option value="">Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="alcoholConsumption">Heavy Alcohol Consumption (Units/Week):</label>
+            <input type="number" id="alcoholConsumption" name="alcoholConsumption" min="0" required>
+
+            <button type="submit">Predict Survival Chance & Cancer Type</button>
+        </form>
+
+        <div class="result" id="result">
+            <h2>Prediction Result:</h2>
+            <p id="predictionOutput"></p>
+            <p id="cancerTypePrediction"></p>
+        </div>
+
+        <div class="cancer-types">
+            <h3>Common Types of Cancer:</h3>
+            <ul>
+                <li>Lung Cancer</li>
+                <li>Breast Cancer</li>
+                <li>Prostate Cancer</li>
+                <li>Colorectal Cancer</li>
+                <li>Skin Cancer (Melanoma)</li>
+                <li>Pancreatic Cancer</li>
+                <li>Liver Cancer</li>
+            </ul>
+        </div>
+    </div>
+    <footer>
+        &copy; 2025 Prediction of Cancer rate and Type by TB. All rights reserved.
+    </footer>
+
+    <script>
+        // Simulated machine learning models
+        const randomForestModel = (features) => {
+            let score = 0;
+
+            // Lung Cancer Predictors
+            if (features.smokingHistory === "current") score += 30;
+            if (features.smokingHistory === "former") score += 15;
+            if (features.secondhandSmoke === "yes") score += 10;
+            if (features.pollutants === "yes") score += 20;
+            if (features.chronicRespiratoryIssues === "yes") score += 25;
+
+            // Breast Cancer Predictors
+            if (features.ageGender > 50 && features.gender === "female") score += 20;
+            if (features.familyHistoryBreast === "yes") score += 25;
+            if (features.brcaMutation === "yes") score += 30;
+            if (features.breastDensity >= 4) score += 15;
+
+            // Prostate Cancer Predictors
+            if (features.ageGender > 50 && features.gender === "male") score += 20;
+            if (features.prostateFamilyHistory === "yes") score += 25;
+            if (features.ethnicity === "african-american") score += 15;
+            if (features.dietFatIntake >= 4) score += 10;
+            if (features.psaLevels > 4) score += 20;
+
+            // Colorectal Cancer Predictors
+            if (features.colorectalFamilyHistory === "yes") score += 25;
+            if (features.dietMeatFiber === "yes") score += 20;
+            if (features.inflammatoryBowelDisease === "yes") score += 30;
+
+            // Skin Cancer Predictors
+            if (features.skinType <= 2) score += 20;
+            if (features.sunExposure === "yes") score += 15;
+            if (features.tanningBeds === "yes") score += 10;
+            if (features.abnormalMoles === "yes") score += 25;
+
+            // Pancreatic Cancer Predictors
+            if (features.pancreaticFamilyHistory === "yes") score += 25;
+            if (features.chronicPancreatitis === "yes") score += 20;
+            if (features.diabetes === "yes") score += 15;
+
+            // Liver Cancer Predictors
+            if (features.hepatitisBC === "yes") score += 30;
+            if (features.cirrhosis === "yes") score += 25;
+            if (features.alcoholConsumption > 14) score += 20;
+
+            return Math.max(0, Math.min(100, 100 - score));
+        };
+
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Input values
+            const features = {
+                smokingHistory: document.getElementById('smokingHistory').value,
+                secondhandSmoke: document.getElementById('secondhandSmoke').value,
+                pollutants: document.getElementById('pollutants').value,
+                chronicRespiratoryIssues: document.getElementById('chronicRespiratoryIssues').value,
+                ageGender: parseFloat(document.getElementById('ageGender').value),
+                familyHistoryBreast: document.getElementById('familyHistoryBreast').value,
+                brcaMutation: document.getElementById('brcaMutation').value,
+                breastDensity: parseFloat(document.getElementById('breastDensity').value),
+                prostateFamilyHistory: document.getElementById('prostateFamilyHistory').value,
+                ethnicity: document.getElementById('ethnicity').value,
+                dietFatIntake: parseFloat(document.getElementById('dietFatIntake').value),
+                psaLevels: parseFloat(document.getElementById('psaLevels').value),
+                colorectalFamilyHistory: document.getElementById('colorectalFamilyHistory').value,
+                dietMeatFiber: document.getElementById('dietMeatFiber').value,
+                inflammatoryBowelDisease: document.getElementById('inflammatoryBowelDisease').value,
+                skinType: parseFloat(document.getElementById('skinType').value),
+                sunExposure: document.getElementById('sunExposure').value,
+                tanningBeds: document.getElementById('tanningBeds').value,
+                abnormalMoles: document.getElementById('abnormalMoles').value,
+                pancreaticFamilyHistory: document.getElementById('pancreaticFamilyHistory').value,
+                chronicPancreatitis: document.getElementById('chronicPancreatitis').value,
+                diabetes: document.getElementById('diabetes').value,
+                hepatitisBC: document.getElementById('hepatitisBC').value,
+                cirrhosis: document.getElementById('cirrhosis').value,
+                alcoholConsumption: parseFloat(document.getElementById('alcoholConsumption').value)
+            };
+
+            // Predict using the model
+            const survivalChance = randomForestModel(features);
+
+            // Predict cancer type based on risk factors
+            let predictedCancerType = "Unknown";
+            if (features.smokingHistory === "current" || features.pollutants === "yes") {
+                predictedCancerType = "Lung Cancer";
+            } else if (features.familyHistoryBreast === "yes" || features.brcaMutation === "yes") {
+                predictedCancerType = "Breast Cancer";
+            } else if (features.ethnicity === "african-american" || features.psaLevels > 4) {
+                predictedCancerType = "Prostate Cancer";
+            } else if (features.colorectalFamilyHistory === "yes" || features.dietMeatFiber === "yes") {
+                predictedCancerType = "Colorectal Cancer";
+            } else if (features.skinType <= 2 || features.abnormalMoles === "yes") {
+                predictedCancerType = "Skin Cancer (Melanoma)";
+            } else if (features.chronicPancreatitis === "yes" || features.diabetes === "yes") {
+                predictedCancerType = "Pancreatic Cancer";
+            } else if (features.hepatitisBC === "yes" || features.cirrhosis === "yes") {
+                predictedCancerType = "Liver Cancer";
+            }
+
+            // Display result
+            const resultDiv = document.getElementById('result');
+            const predictionOutput = document.getElementById('predictionOutput');
+            const cancerTypePrediction = document.getElementById('cancerTypePrediction');
+
+            predictionOutput.textContent = `Based on the provided risk factors, your predicted chance of survival is ${survivalChance.toFixed(2)}%.`;
+            cancerTypePrediction.textContent = `You may be at higher risk for: ${predictedCancerType}.`;
+
+            resultDiv.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
